@@ -19,22 +19,22 @@ public interface StudentRepository
 
 
     // =====================================================
-    // PAGINATION + FILTERING
-    // =====================================================
+// PAGINATION + FILTERING
+// =====================================================
 
     @Query("""
-        SELECT s
-        FROM Student s
-        WHERE (:course IS NULL OR s.course = :course)
-        AND (:branch IS NULL OR s.branch = :branch)
-        AND (:year IS NULL OR s.year = :year)
-        AND (:sec IS NULL OR s.sec = :sec)
-        AND (:eventName IS NULL OR s.event_name = :eventName)
-        AND (:eventDate IS NULL OR s.event_date = :eventDate)
-        AND (:startTime IS NULL OR s.start_time = :startTime)
-        AND (:endTime IS NULL OR s.end_time = :endTime)
-        ORDER BY s.event_date DESC, s.start_time DESC
-        """)
+    SELECT s
+    FROM Student s
+    WHERE s.course = COALESCE(:course, s.course)
+    AND s.branch = COALESCE(:branch, s.branch)
+    AND s.year = COALESCE(:year, s.year)
+    AND s.sec = COALESCE(:sec, s.sec)
+    AND s.event_name = COALESCE(:eventName, s.event_name)
+    AND s.event_date = COALESCE(:eventDate, s.event_date)
+    AND s.start_time = COALESCE(:startTime, s.start_time)
+    AND s.end_time = COALESCE(:endTime, s.end_time)
+    ORDER BY s.event_date DESC, s.start_time DESC
+    """)
     Page<Student> findStudentsWithFilters(
 
             @Param("course")
@@ -64,32 +64,50 @@ public interface StudentRepository
             Pageable pageable
     );
 
-    // =====================================================
-    // Download Excel
-    // =====================================================
+
+// =====================================================
+// Download Excel
+// =====================================================
 
     @Query("""
     SELECT s
     FROM Student s
-    WHERE (:course IS NULL OR s.course = :course)
-    AND (:branch IS NULL OR s.branch = :branch)
-    AND (:year IS NULL OR s.year = :year)
-    AND (:sec IS NULL OR s.sec = :sec)
-    AND (:eventName IS NULL OR s.event_name = :eventName)
-    AND (:eventDate IS NULL OR s.event_date = :eventDate)
-    AND (:startTime IS NULL OR s.start_time = :startTime)
-    AND (:endTime IS NULL OR s.end_time = :endTime)
+    WHERE s.course = COALESCE(:course, s.course)
+    AND s.branch = COALESCE(:branch, s.branch)
+    AND s.year = COALESCE(:year, s.year)
+    AND s.sec = COALESCE(:sec, s.sec)
+    AND s.event_name = COALESCE(:eventName, s.event_name)
+    AND s.event_date = COALESCE(:eventDate, s.event_date)
+    AND s.start_time = COALESCE(:startTime, s.start_time)
+    AND s.end_time = COALESCE(:endTime, s.end_time)
     ORDER BY s.event_date DESC, s.start_time DESC
     """)
     List<Student> findAllStudentsWithFilters(
-            @Param("course") String course,
-            @Param("branch") String branch,
-            @Param("year") Integer year,
-            @Param("sec") String sec,
-            @Param("eventName") String eventName,
-            @Param("eventDate") LocalDate eventDate,
-            @Param("startTime") LocalTime startTime,
-            @Param("endTime") LocalTime endTime);
+
+            @Param("course")
+            String course,
+
+            @Param("branch")
+            String branch,
+
+            @Param("year")
+            Integer year,
+
+            @Param("sec")
+            String sec,
+
+            @Param("eventName")
+            String eventName,
+
+            @Param("eventDate")
+            LocalDate eventDate,
+
+            @Param("startTime")
+            LocalTime startTime,
+
+            @Param("endTime")
+            LocalTime endTime
+    );
 
 
     // =====================================================
