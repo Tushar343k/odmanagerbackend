@@ -114,7 +114,7 @@ public class StudentController {
             @RequestParam(defaultValue = "0")
             int page,
 
-            @RequestParam(defaultValue = "5")
+            @RequestParam(defaultValue = "50")
             int size) {
 
 
