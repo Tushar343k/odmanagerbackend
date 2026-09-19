@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,6 +48,9 @@ public class SecurityConfig {
 
         http
 
+                // Enable CORS
+                .cors(cors -> {})
+
                 // Disable CSRF because we are using JWT
                 .csrf(csrf -> csrf.disable())
 
@@ -59,6 +64,10 @@ public class SecurityConfig {
                 // API permissions
                 .authorizeHttpRequests(auth -> auth
 
+                        // Allow browser CORS preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+
                         // Login, signup and other auth APIs
                         // are publicly accessible
                         .requestMatchers("/auth/**")
@@ -66,14 +75,14 @@ public class SecurityConfig {
 
                         // Only ADMIN can upload Excel
                         .requestMatchers(
-                                org.springframework.http.HttpMethod.POST,
+                                HttpMethod.POST,
                                 "/students"
                         )
                         .hasRole("ADMIN")
 
                         // Only ADMIN can delete all records
                         .requestMatchers(
-                                org.springframework.http.HttpMethod.DELETE,
+                                HttpMethod.DELETE,
                                 "/students/delete-all"
                         )
                         .hasRole("ADMIN")
@@ -96,3 +105,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
