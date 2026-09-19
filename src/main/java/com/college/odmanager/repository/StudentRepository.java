@@ -17,10 +17,17 @@ import java.util.List;
 public interface StudentRepository
         extends JpaRepository<Student, Integer> {
 
-    boolean existsByReg_noAndEvent_dateAndStart_time(
-            String reg_no,
-            LocalDate event_date,
-            LocalTime start_time
+    @Query("""
+    SELECT COUNT(s) > 0
+    FROM Student s
+    WHERE s.reg_no = :regNo
+    AND s.event_date = :eventDate
+    AND s.start_time = :startTime
+    """)
+    boolean existsByRegNoAndEventDateAndStartTime(
+            @Param("regNo") String regNo,
+            @Param("eventDate") LocalDate eventDate,
+            @Param("startTime") LocalTime startTime
     );
 
 

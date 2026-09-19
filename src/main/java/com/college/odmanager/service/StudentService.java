@@ -59,7 +59,7 @@ public class StudentService {
 
         List<Student> newStudents = students.stream()
                 .filter(student ->
-                        !repository.existsByReg_noAndEvent_dateAndStart_time(
+                        !repository.existsByRegNoAndEventDateAndStartTime(
                                 student.getReg_no(),
                                 student.getEvent_date(),
                                 student.getStart_time()
