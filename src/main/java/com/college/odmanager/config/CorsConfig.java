@@ -22,7 +22,10 @@ public class CorsConfig implements WebMvcConfigurer {
                         "DELETE",
                         "OPTIONS"
                 )
-                .allowedHeaders("*")
+                .allowedHeaders(
+                        "Authorization",
+                        "Content-Type"
+                )
                 .allowCredentials(true);
     }
 }
