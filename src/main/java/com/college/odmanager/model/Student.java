@@ -1,9 +1,6 @@
 package com.college.odmanager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +16,15 @@ import java.time.LocalTime;
 @NoArgsConstructor
 
 @Entity
+@Table(
+        name = "student",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_regno_eventdate_starttime",
+                        columnNames = {"reg_no", "event_date", "start_time"}
+                )
+        }
+)
 public class Student {
 
     @Id

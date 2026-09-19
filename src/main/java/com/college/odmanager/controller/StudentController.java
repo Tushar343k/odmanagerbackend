@@ -67,6 +67,16 @@ public class StudentController {
         return service.updateStudent(student);
     }
 
+    // =====================================================
+    // DELETE ALL STUDENT
+    // =====================================================
+
+    @DeleteMapping("/delete-all")
+    public void deleteAllStudents() {
+
+        service.deleteAllStudents();
+    }
+
 
     // =====================================================
     // DELETE STUDENT
@@ -79,6 +89,7 @@ public class StudentController {
         service.deleteStudent(id);
     }
 
+    
 
     // =====================================================
     // PAGINATION + FILTERING

@@ -57,7 +57,17 @@ public class StudentService {
 
     public List<Student> addStudents(List<Student> students) {
 
-        return repository.saveAll(students);
+        List<Student> newStudents = students.stream()
+                .filter(student ->
+                        !repository.existsByReg_noAndEvent_dateAndStart_time(
+                                student.getReg_no(),
+                                student.getEvent_date(),
+                                student.getStart_time()
+                        )
+                )
+                .toList();
+
+        return repository.saveAll(newStudents);
     }
 
 
@@ -78,6 +88,14 @@ public class StudentService {
     public void deleteStudent(int id) {
 
         repository.deleteById(id);
+    }
+    // =========================
+    // DELETE ALL STUDENTS
+    // =========================
+
+    public void deleteAllStudents() {
+
+        repository.deleteAll();
     }
 
 

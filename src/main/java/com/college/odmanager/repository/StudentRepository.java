@@ -17,6 +17,12 @@ import java.util.List;
 public interface StudentRepository
         extends JpaRepository<Student, Integer> {
 
+    boolean existsByReg_noAndEvent_dateAndStart_time(
+            String reg_no,
+            LocalDate event_date,
+            LocalTime start_time
+    );
+
 
     // =====================================================
 // PAGINATION + FILTERING
