@@ -1,5 +1,6 @@
 package com.college.odmanager.controller;
 
+import com.college.odmanager.dto.UploadResponse;
 import com.college.odmanager.model.Student;
 import com.college.odmanager.service.StudentService;
 
@@ -49,7 +50,7 @@ public class StudentController {
     // =====================================================
 
     @PostMapping
-    public List<Student> addStudents(
+    public UploadResponse addStudents(
             @RequestBody List<Student> students) {
 
         return service.addStudents(students);

@@ -1,5 +1,6 @@
 package com.college.odmanager.service;
 
+import com.college.odmanager.dto.UploadResponse;
 import com.college.odmanager.model.Student;
 import com.college.odmanager.repository.StudentRepository;
 
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class StudentService {
@@ -50,14 +53,29 @@ public class StudentService {
     }
 
 
-    // =========================
-    // ADD MULTIPLE STUDENTS
-    // Used for Excel Upload
-    // =========================
+// =========================
+// ADD MULTIPLE STUDENTS
+// Used for Excel Upload
+// =========================
 
-    public List<Student> addStudents(List<Student> students) {
+    public UploadResponse addStudents(List<Student> students) {
+
+        Set<String> uploadedRecords = new HashSet<>();
 
         List<Student> newStudents = students.stream()
+
+                // Remove duplicate records from same Excel file
+                .filter(student -> {
+
+                    String key =
+                            student.getReg_no() + "|" +
+                                    student.getEvent_date() + "|" +
+                                    student.getStart_time();
+
+                    return uploadedRecords.add(key);
+                })
+
+                // Skip records already present in database
                 .filter(student ->
                         !repository.existsByRegNoAndEventDateAndStartTime(
                                 student.getReg_no(),
@@ -65,10 +83,19 @@ public class StudentService {
                                 student.getStart_time()
                         )
                 )
+
                 .toList();
 
-        return repository.saveAll(newStudents);
+        repository.saveAll(newStudents);
+
+        int inserted = newStudents.size();
+
+        int skipped = students.size() - inserted;
+
+        return new UploadResponse(inserted, skipped);
     }
+
+
 
 
     // =========================
@@ -89,6 +116,8 @@ public class StudentService {
 
         repository.deleteById(id);
     }
+
+
     // =========================
     // DELETE ALL STUDENTS
     // =========================
@@ -273,14 +302,32 @@ public class StudentService {
                 startTime
         );
     }
+
+
+    // =====================================================
+    // DOWNLOAD EXCEL
+    // =====================================================
+
     public List<Student> getAllStudentsWithFilters(
-            String course, String branch, Integer year, String sec,
-            String eventName, LocalDate eventDate,
-            LocalTime startTime, LocalTime endTime) {
+            String course,
+            String branch,
+            Integer year,
+            String sec,
+            String eventName,
+            LocalDate eventDate,
+            LocalTime startTime,
+            LocalTime endTime) {
 
         return repository.findAllStudentsWithFilters(
-                course, branch, year, sec,
-                eventName, eventDate, startTime, endTime
+                course,
+                branch,
+                year,
+                sec,
+                eventName,
+                eventDate,
+                startTime,
+                endTime
         );
     }
 }
+
